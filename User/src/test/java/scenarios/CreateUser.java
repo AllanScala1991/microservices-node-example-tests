@@ -1,12 +1,17 @@
 package scenarios;
 
+import org.junit.AfterClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import static org.hamcrest.Matchers.*;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import com.github.javafaker.Faker;
 import org.junit.runners.MethodSorters;
+import utils.UserService;
+
 import static io.restassured.RestAssured.*;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -19,6 +24,7 @@ public class CreateUser {
     private static String username = faker.name().firstName().toLowerCase() + faker.number().digits(2);
     private static String password = faker.number().digits(8);
     private static String id;
+    private static final UserService userService = new UserService();
 
     @Test
     public void t01_createUserSuccessfully() {
@@ -79,5 +85,10 @@ public class CreateUser {
                 .then()
                 .statusCode(409)
                 .body("message", is("Usuário já cadastrado, recupere a senha ou tente novamente."));
+    }
+
+    @AfterClass
+    public static void afterAll() throws IOException {
+        userService.delete(id, username, password);
     }
 }

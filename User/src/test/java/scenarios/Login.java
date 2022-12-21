@@ -1,10 +1,12 @@
 package scenarios;
 
 import com.github.javafaker.Faker;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import utils.UserService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,6 +21,7 @@ public class Login {
     private static String username = faker.name().firstName() + faker.number().digits(2);
     private static String password = faker.number().digits(8);
     private static String id;
+    private static final UserService userService = new UserService();
 
     @BeforeClass
     public static void beforeAll() throws IOException {
@@ -101,5 +104,10 @@ public class Login {
                 .then()
                 .statusCode(401)
                 .body("message", is("Usuário ou Senha incorretos, tente novamente."));
+    }
+
+    @AfterClass
+    public static void afterAll() throws IOException {
+        userService.delete(id, username, password);
     }
 }

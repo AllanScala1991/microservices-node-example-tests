@@ -80,7 +80,6 @@ public class UpdateUser {
                 .when()
                 .put(baseURL)
                 .then()
-                .log().all()
                 .statusCode(500)
                 .body("message.meta.cause", is("Record to update not found."));
     }
